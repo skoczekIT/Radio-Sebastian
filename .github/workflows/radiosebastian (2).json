@@ -1,0 +1,145 @@
+{
+  "node": "element",
+  "tag": "body",
+  "child": [
+    {
+      "node": "element",
+      "tag": "div",
+      "attr": {
+        "class": "player-card"
+      },
+      "child": [
+        {
+          "node": "element",
+          "tag": "div",
+          "attr": {
+            "class": "logo-circle",
+            "id": "rsLogo"
+          },
+          "child": [
+            {
+              "node": "element",
+              "tag": "img",
+              "attr": {
+                "src": "https://drive.google.com/thumbnail?id=1BAe4Sy78N_jHCzB5BH9JgtwN8BjBBokl&sz=w500"
+              }
+            }
+          ]
+        },
+        {
+          "node": "element",
+          "tag": "div",
+          "attr": {
+            "class": "brand-name"
+          },
+          "child": [
+            {
+              "node": "text",
+              "text": "Rádio Sebastián"
+            }
+          ],
+          "text": "Rádio Sebastián"
+        },
+        {
+          "node": "element",
+          "tag": "div",
+          "attr": {
+            "class": "status-label"
+          },
+          "child": [
+            {
+              "node": "text",
+              "text": "PRÁVĚ HRAJE"
+            }
+          ],
+          "text": "PRÁVĚ HRAJE"
+        },
+        {
+          "node": "element",
+          "tag": "div",
+          "attr": {
+            "id": "song-title"
+          },
+          "child": [
+            {
+              "node": "text",
+              "text": "Načítání..."
+            }
+          ],
+          "text": "Načítání..."
+        },
+        {
+          "node": "element",
+          "tag": "button",
+          "attr": {
+            "class": "play-btn",
+            "id": "play-btn"
+          },
+          "child": [
+            {
+              "node": "element",
+              "tag": "i",
+              "attr": {
+                "class": "fas fa-play",
+                "id": "play-icon"
+              }
+            }
+          ]
+        },
+        {
+          "node": "element",
+          "tag": "div",
+          "attr": {
+            "class": "vol-cont"
+          },
+          "child": [
+            {
+              "node": "element",
+              "tag": "i",
+              "attr": {
+                "class": "fas fa-volume-down"
+              }
+            },
+            {
+              "node": "element",
+              "tag": "input",
+              "attr": {
+                "type": "range",
+                "id": "vol-slider",
+                "min": "0",
+                "max": "1",
+                "step": "0.01",
+                "value": "0.8"
+              }
+            },
+            {
+              "node": "element",
+              "tag": "i",
+              "attr": {
+                "class": "fas fa-volume-up"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "node": "element",
+      "tag": "audio",
+      "attr": {
+        "id": "stream"
+      }
+    },
+    {
+      "node": "element",
+      "tag": "script",
+      "child": [
+        {
+          "node": "text",
+          "text": "const streamUrl = \"http://151.243.169.248/radio/8000/radio.mp3\";\nconst apiUrl = \"http://151.243.169.248/api/nowplaying/radiosebastian\";\n\nconst audio = document.getElementById('stream');\nconst btn = document.getElementById('play-btn');\nconst icon = document.getElementById('play-icon');\nconst rsLogo = document.getElementById('rsLogo');\nconst volSlider = document.getElementById('vol-slider');\nconst songTitle = document.getElementById('song-title');\n\nbtn.onclick = function() {\n    if (audio.paused) {\n        audio.src = streamUrl + \"?ts=\" + Date.now();\n        audio.play();\n        icon.className = 'fas fa-pause';\n        rsLogo.style.animationPlayState = 'running';\n    } else {\n        audio.pause();\n        audio.src = \"\";\n        icon.className = 'fas fa-play';\n        rsLogo.style.animationPlayState = 'paused';\n    }\n};\n\nvolSlider.oninput = () => audio.volume = volSlider.value;\n\nasync function updateRadio() {\n    try {\n        const res = await fetch(apiUrl);\n        const data = await res.json();\n        const song = data.now_playing.song;\n\n        if (song.artist && song.title) {\n            songTitle.innerText = song.artist + \" - \" + song.title;\n        } else {\n            songTitle.innerText = song.text || \"Rádio Sebastián - živě\";\n        }\n\n    } catch {\n        songTitle.innerText = \"Bez připojení\";\n    }\n}\n\nupdateRadio();\nsetInterval(updateRadio, 10000);"
+        }
+      ],
+      "text": "const streamUrl = \"http://151.243.169.248/radio/8000/radio.mp3\";\nconst apiUrl = \"http://151.243.169.248/api/nowplaying/radiosebastian\";\n\nconst audio = document.getElementById('stream');\nconst btn = document.getElementById('play-btn');\nconst icon = document.getElementById('play-icon');\nconst rsLogo = document.getElementById('rsLogo');\nconst volSlider = document.getElementById('vol-slider');\nconst songTitle = document.getElementById('song-title');\n\nbtn.onclick = function() {\n    if (audio.paused) {\n        audio.src = streamUrl + \"?ts=\" + Date.now();\n        audio.play();\n        icon.className = 'fas fa-pause';\n        rsLogo.style.animationPlayState = 'running';\n    } else {\n        audio.pause();\n        audio.src = \"\";\n        icon.className = 'fas fa-play';\n        rsLogo.style.animationPlayState = 'paused';\n    }\n};\n\nvolSlider.oninput = () => audio.volume = volSlider.value;\n\nasync function updateRadio() {\n    try {\n        const res = await fetch(apiUrl);\n        const data = await res.json();\n        const song = data.now_playing.song;\n\n        if (song.artist && song.title) {\n            songTitle.innerText = song.artist + \" - \" + song.title;\n        } else {\n            songTitle.innerText = song.text || \"Rádio Sebastián - živě\";\n        }\n\n    } catch {\n        songTitle.innerText = \"Bez připojení\";\n    }\n}\n\nupdateRadio();\nsetInterval(updateRadio, 10000);"
+    }
+  ]
+}
