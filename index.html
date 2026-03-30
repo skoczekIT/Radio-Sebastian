@@ -4,221 +4,152 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>RADIOSEBASTIAN - AzuraCast</title>
 
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <title>RADIOSEBASTIAN - Player</title>
+
+    <link rel="stylesheet" href="/static/vite_dist/assets/Layout-BnjlKdFv.css">
+    <meta name="theme-color" content="#2196F3">
 
     <style>
-        body { 
-            margin: 0; 
-            padding: 0; 
-            font-family: sans-serif; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            min-height: 100vh;
-            /* Ustawienie wskazanego obrazu jako tła strony */
-            background-image: url(http://151.243.169.248/static/uploads/radiosebastian/background.1774809202.png);
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed; /* Tło zostaje w miejscu podczas przewijania */
-        }
-        
-        .player-card { 
-            background: rgba(255, 255, 255, 0.9); /* Lekko przezroczyste białe tło dla karty */
-            padding: 40px; 
-            border-radius: 30px; 
-            backdrop-filter: blur(5px); /* Rozmycie tła pod kartą */
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
-            width: 320px; 
-            text-align: center;
+        body {
+            margin: 0;
+            background: #001a2b;
+            color: white;
+            font-family: 'Inter', sans-serif;
         }
 
-        .logo-circle { 
-            width: 180px; 
-            height: 180px; 
-            margin: 0 auto 10px; 
-            border-radius: 50%; 
-            overflow: hidden; 
-            border: 5px solid #00f2ff; 
-            animation: rotate 10s linear infinite; 
-            animation-play-state: paused; 
-        }
-
-        .logo-circle img { width: 100%; height: 100%; object-fit: cover; }
-
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-        .visualizer {
+        .full-screen-center {
+            width: 100vw;
+            height: 100vh;
             display: flex;
+            flex-direction: column;
+            align-items: center;
             justify-content: center;
-            align-items: flex-end;
-            height: 20px;
-            gap: 3px;
-            margin-bottom: 15px;
-            opacity: 0;
-            transition: opacity 0.3s;
         }
 
-        .visualizer.active { opacity: 1; }
-
-        .bar {
-            width: 4px;
-            background: #00f2ff;
-            border-radius: 2px;
-            animation: bounce 1s ease-in-out infinite;
+        .logo-circle {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            border: 3px solid #00f2ff;
+            margin-bottom: 20px;
+            overflow: hidden;
+            animation: spin 12s linear infinite;
+            animation-play-state: paused;
         }
 
-        @keyframes bounce {
-            0%, 100% { height: 5px; }
-            50% { height: 20px; }
+        .logo-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
-        .bar:nth-child(2) { animation-delay: 0.1s; }
-        .bar:nth-child(3) { animation-delay: 0.2s; }
-        .bar:nth-child(4) { animation-delay: 0.3s; }
-        .bar:nth-child(5) { animation-delay: 0.4s; }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
 
-        .brand-name { font-size: 1.8rem; font-weight: bold; margin-bottom: 10px; color: #1e3a8a; }
-        .status-label { color: #888; font-size: 0.7rem; letter-spacing: 2px; margin-bottom: 5px; }
-
-        #song-title { 
-            font-size: 1rem; 
-            margin-bottom: 25px; 
-            color: #1e3a8a; 
-            min-height: 3em; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
+        .brand-name {
+            font-size: 2.5rem;
             font-weight: bold;
         }
 
-        .play-btn { 
-            background: #00f2ff; 
-            border: none; 
-            width: 70px; 
-            height: 70px; 
-            border-radius: 50%; 
-            font-size: 1.5rem; 
-            color: #000; 
-            cursor: pointer; 
-            margin-bottom: 20px; 
-            transition: transform 0.2s, background-color 0.2s;
+        .play-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: none;
+            background: white;
+            font-size: 2rem;
+            cursor: pointer;
+            margin: 20px 0;
         }
 
-        .play-btn:hover { 
-            transform: scale(1.1); 
-            background-color: #00e6f2;
+        .vol-cont {
+            display: flex;
+            gap: 10px;
+            align-items: center;
         }
 
-        .vol-cont { display: flex; align-items: center; gap: 10px; justify-content: center; color: #1e3a8a; }
-        input[type=range] { cursor: pointer; accent-color: #00f2ff; width: 150px; }
+        input[type="range"] {
+            width: 200px;
+        }
 
-        .my-footer { margin-top: 25px; font-size: 0.7rem; color: #666; }
-        .my-footer a { color: #00a6ff; text-decoration: none; font-weight: bold; }
+        .footer {
+            position: absolute;
+            bottom: 10px;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
     </style>
 </head>
+
 <body>
 
-    <div class="player-card">
-        <div class="logo-circle" id="rsLogo">
-            <img src="https://drive.google.com/thumbnail?id=1BAe4Sy78N_jHCzB5BH9JgtwN8BjBBokl&sz=w500" alt="Radio Sebastián Logo">
-        </div>
+<div class="full-screen-center">
 
-        <div class="visualizer" id="visualizer">
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-        </div>
-
-        <div class="brand-name">Rádio Sebastián</div>
-        <div class="status-label">PRÁVĚ HRAJE</div>
-        <div id="song-title">Načítání...</div>
-
-        <button class="play-btn" id="play-btn">
-            <i class="fas fa-play" id="play-icon"></i>
-        </button>
-
-        <div class="vol-cont">
-            <i class="fas fa-volume-down"></i>
-            <input type="range" id="vol-slider" min="0" max="1" step="0.01" value="0.8">
-            <i class="fas fa-volume-up"></i>
-        </div>
-
-        <div class="my-footer">
-            © 2026 Rádio Sebastián • Všechna práva vyhrazena<br>
-            Web vytvořil: <a href="https://sites.google.com/view/martin-weby/web" target="_blank">Martin</a>
-        </div>
+    <div class="logo-circle" id="logo">
+        <img src="https://drive.google.com/thumbnail?id=1BAe4Sy78N_jHCzB5BH9JgtwN8BjBBokl&sz=w500">
     </div>
 
-    <audio id="stream"></audio>
+    <div class="brand-name">Rádio Sebastián</div>
 
-    <script>
-        // Adresy URL z Twojego serwera IP
-        const streamUrl = "http://151.243.169.248/radio/8000/radio.mp3";
-        const apiUrl = "http://151.243.169.248/api/nowplaying/radiosebastian";
+    <div>PRÁVĚ HRAJE</div>
+    <div id="song">Načítám skladbu...</div>
 
-        const audio = document.getElementById('stream');
-        const btn = document.getElementById('play-btn');
-        const icon = document.getElementById('play-icon');
-        const rsLogo = document.getElementById('rsLogo');
-        const visualizer = document.getElementById('visualizer');
-        const volSlider = document.getElementById('vol-slider');
-        const songTitle = document.getElementById('song-title');
+    <button class="play-btn" id="play">▶</button>
 
-        btn.onclick = function() {
-            if (audio.paused) {
-                // Dodanie timestampu zapobiega buforowaniu starego nagrania
-                audio.src = streamUrl + "?ts=" + Date.now();
-                audio.play().catch(error => {
-                    console.error("Błąd autoodtwarzania:", error);
-                    songTitle.innerText = "Kliknij Play, aby posłuchać";
-                });
-                icon.className = 'fas fa-pause';
-                rsLogo.style.animationPlayState = 'running';
-                visualizer.classList.add('active');
-            } else {
-                audio.pause();
-                audio.src = ""; // Całkowite zatrzymanie pobierania strumienia
-                icon.className = 'fas fa-play';
-                rsLogo.style.animationPlayState = 'paused';
-                visualizer.classList.remove('active');
-            }
-        };
+    <div class="vol-cont">
+        🔉
+        <input type="range" id="vol" min="0" max="1" step="0.01" value="0.8">
+        🔊
+    </div>
 
-        // Obsługa głośności
-        volSlider.oninput = () => audio.volume = volSlider.value;
+    <div class="footer">
+        © 2026 Rádio Sebastián • Všechna práva vyhrazena
+    </div>
 
-        // Funkcja pobierająca dane o utworze
-        async function updateRadio() {
-            try {
-                // Używamy trybu 'cors', aby uniknąć problemów z blokowaniem żądań
-                const res = await fetch(apiUrl, { mode: 'cors' });
-                if (!res.ok) throw new Error('Problem z siecią');
-                
-                const data = await res.json();
-                const song = data.now_playing.song;
+</div>
 
-                if (song.artist && song.title) {
-                    songTitle.innerText = song.artist + " - " + song.title;
-                } else {
-                    songTitle.innerText = song.text || "Rádio Sebastián - živě";
-                }
-            } catch (error) {
-                console.error("Błąd API:", error);
-                // Zachowujemy ostatni tytuł lub pokazujemy domyślny
-                if (songTitle.innerText === "Načítání...") {
-                    songTitle.innerText = "Rádio Sebastián";
-                }
-            }
-        }
+<audio id="audio" src="/radio/8000/radio.mp3"></audio>
 
-        // Pierwsze wywołanie i ustawienie interwału (co 10 sekund)
-        updateRadio();
-        setInterval(updateRadio, 10000);
-    </script>
+<script>
+const audio = document.getElementById('audio');
+const btn = document.getElementById('play');
+const logo = document.getElementById('logo');
+const vol = document.getElementById('vol');
+
+btn.onclick = () => {
+    if (audio.paused) {
+        audio.src = "/radio/8000/radio.mp3?ts=" + Date.now();
+        audio.play();
+        btn.innerText = "⏸";
+        logo.style.animationPlayState = "running";
+    } else {
+        audio.pause();
+        btn.innerText = "▶";
+        logo.style.animationPlayState = "paused";
+    }
+};
+
+vol.oninput = () => audio.volume = vol.value;
+
+function updateSong() {
+    fetch('/api/nowplaying/radiosebastian')
+        .then(r => r.json())
+        .then(data => {
+            document.getElementById('song').innerText =
+                data.now_playing.song.text;
+        })
+        .catch(() => {
+            document.getElementById('song').innerText =
+                "Rádio Sebastián - živě";
+        });
+}
+
+updateSong();
+setInterval(updateSong, 15000);
+</script>
+
 </body>
 </html>
